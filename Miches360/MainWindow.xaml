@@ -1,0 +1,505 @@
+<Window x:Class="Miches360.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Miches360.ViewModels"
+        xmlns:vistas="clr-namespace:Miches360.Vistas"
+        xmlns:controles="clr-namespace:Miches360.Controles"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+        Title="Miches 360 · Punto de venta"
+        Icon="Assets/logo.png"
+        Width="1366" Height="768"
+        MinWidth="1200" MinHeight="700"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Fondo}"
+        Foreground="{StaticResource Texto}"
+        FontFamily="{StaticResource FuenteTexto}">
+
+    <Window.Resources>
+        <Style x:Key="EtiquetaActividad" TargetType="Border">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="8,2" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{StaticResource Chip}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Etiqueta}" Value="COBRO">
+                    <Setter Property="Background" Value="{StaticResource Verde}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Etiqueta}" Value="ORDEN">
+                    <Setter Property="Background" Value="{StaticResource Azul}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Etiqueta}" Value="CUENTA">
+                    <Setter Property="Background" Value="{StaticResource Acento}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Etiqueta}" Value="CANCELADA">
+                    <Setter Property="Background" Value="{StaticResource Rojo}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="TextoEtiquetaActividad" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+            <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Etiqueta}" Value="CUENTA">
+                    <Setter Property="Foreground" Value="{StaticResource TextoSobreAcento}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate DataType="{x:Type vm:VentaViewModel}">
+            <vistas:VentaVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CobroViewModel}">
+            <vistas:CobroVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:EnConstruccionViewModel}">
+            <vistas:EnConstruccionVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AjustesViewModel}">
+            <vistas:AjustesVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CatalogoAdminViewModel}">
+            <vistas:CatalogoAdminVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MesasViewModel}">
+            <vistas:MesasVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:OrdenMesaViewModel}">
+            <vistas:OrdenMesaVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CuentaMesaViewModel}">
+            <vistas:CuentaMesaVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CorteViewModel}">
+            <vistas:CorteVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PartesIgualesViewModel}">
+            <vistas:PartesIgualesVista />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:HistorialViewModel}">
+            <vistas:HistorialVista />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="{StaticResource Encabezado}"
+                BorderBrush="{StaticResource Borde}"
+                BorderThickness="0,0,0,1">
+            <Grid Margin="20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Width="52" Height="52" CornerRadius="12" ClipToBounds="True">
+                    <Border.Background>
+                        <ImageBrush ImageSource="Assets/logo.png" Stretch="UniformToFill" />
+                    </Border.Background>
+                </Border>
+
+                <TextBlock Grid.Column="1"
+                           Margin="14,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="MICHES 360"
+                           Style="{StaticResource Titulo}"
+                           FontSize="30"
+                           Foreground="{StaticResource Acento}" />
+
+                <ItemsControl Grid.Column="2"
+                              Margin="24,0,0,0"
+                              VerticalAlignment="Center"
+                              ItemsSource="{Binding Secciones}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:SeccionItem}">
+                            <Button Height="52"
+                                    Margin="0,0,8,0"
+                                    Padding="18,0"
+                                    Content="{Binding Texto}"
+                                    Command="{Binding DataContext.NavegarCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    CommandParameter="{Binding}">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource BotonChip}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding EstaSeleccionada}" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource Acento}" />
+                                                <Setter Property="Foreground" Value="{StaticResource TextoSobreAcento}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding NombreCaja}"
+                               HorizontalAlignment="Right"
+                               FontSize="15"
+                               FontWeight="Bold" />
+                    <TextBlock Text="Sin internet · datos en este equipo"
+                               HorizontalAlignment="Right"
+                               Style="{StaticResource EtiquetaSuave}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{StaticResource Riel}" BorderBrush="{StaticResource Borde}" BorderThickness="0,0,0,1"
+                DataContext="{Binding BarraActividad}">
+            <Grid Margin="14,4,20,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Style="{StaticResource EtiquetaSuave}"
+                           Text="Aquí verás lo último que pase: mesas abiertas, órdenes de los meseros, cobros y cancelaciones."
+                           Visibility="{Binding HayMovimientos, Converter={StaticResource BoolAVisibilidad}, ConverterParameter=invertir}" />
+
+                <Button Height="40" MinHeight="40" Padding="8,0" HorizontalAlignment="Left" HorizontalContentAlignment="Left"
+                        Style="{StaticResource BotonFila}" Margin="0" Command="{Binding AbrirCommand}"
+                        ToolTip="Ver el detalle"
+                        Visibility="{Binding HayMovimientos, Converter={StaticResource BoolAVisibilidad}}">
+                    <StackPanel Orientation="Horizontal" DataContext="{Binding Ultimo}">
+                        <Border Style="{StaticResource EtiquetaActividad}">
+                            <TextBlock Text="{Binding Etiqueta}" Style="{StaticResource TextoEtiquetaActividad}" />
+                        </Border>
+                        <TextBlock Margin="10,0,0,0" Text="{Binding Titulo}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" />
+                        <TextBlock Margin="10,0,0,0" Text="{Binding Detalle}" FontSize="14" VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextoSuave}" TextTrimming="CharacterEllipsis" MaxWidth="460" />
+                        <TextBlock Margin="12,0,0,0" Text="{Binding Espera}" FontSize="13" VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextoSuave}" />
+                        <TextBlock Margin="10,0,0,0" Text="›" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Acento}" />
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="1" Height="38" MinHeight="38" Padding="16,0" FontSize="15"
+                        Style="{StaticResource BotonContorno}" Command="{Binding AlternarPanelCommand}"
+                        Visibility="{Binding HayMovimientos, Converter={StaticResource BoolAVisibilidad}}">
+                    <TextBlock>
+                        <Run Text="{Binding TextoBoton, Mode=OneWay}" />
+                        <Run Text=" ▾" />
+                    </TextBlock>
+                </Button>
+            </Grid>
+        </Border>
+
+        <ContentControl Grid.Row="2"
+                        Focusable="False"
+                        Content="{Binding Navegador.VistaActual}" />
+
+        <Button Grid.Row="2" Margin="0,0,0,24" MaxWidth="760" MinHeight="56" Padding="22,10"
+                HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                Command="{Binding CerrarAvisoCommand}"
+                Visibility="{Binding Aviso, Converter={StaticResource ValorAVisibilidad}}">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource BotonBase}">
+                    <Setter Property="Background" Value="{StaticResource Verde}" />
+                    <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AvisoEsError}" Value="True">
+                            <Setter Property="Background" Value="{StaticResource Rojo}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Button.Effect>
+                <DropShadowEffect BlurRadius="18" ShadowDepth="4" Opacity="0.45" />
+            </Button.Effect>
+            <TextBlock Text="{Binding Aviso}" TextWrapping="Wrap" FontSize="16" FontWeight="SemiBold" TextAlignment="Center" />
+        </Button>
+
+        <StackPanel Grid.Row="2" Margin="24,0,0,24" Width="340"
+                    HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                    DataContext="{Binding Avisos}"
+                    Visibility="{Binding HayMinimizadas, Converter={StaticResource BoolAVisibilidad}}">
+
+            <Border Margin="0,0,0,10" Padding="12,12,12,4" CornerRadius="18"
+                    Background="{StaticResource Encabezado}" BorderBrush="{StaticResource Acento}" BorderThickness="2"
+                    Visibility="{Binding ListaAbierta, Converter={StaticResource BoolAVisibilidad}}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="4" Opacity="0.45" />
+                </Border.Effect>
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Minimizadas}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:AvisoMesaItem}">
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button Height="62" Padding="16,0" HorizontalContentAlignment="Left"
+                                            Style="{StaticResource BotonChip}"
+                                            Command="{Binding DataContext.RestaurarCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip="Ver aviso">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding TituloBanda}" FontSize="11" FontWeight="ExtraBold" Foreground="{StaticResource Acento}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding EsOrden}" Value="True">
+                                                                <Setter Property="Foreground" Value="{StaticResource VerdeClaro}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Resumen}" FontSize="17" FontWeight="ExtraBold" />
+                                            <TextBlock Text="{Binding Espera}" FontSize="12" FontWeight="SemiBold" Opacity="0.7" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Grid.Column="1" Width="56" Height="62" Margin="8,0,0,0" Content="✕" FontSize="18"
+                                            Style="{StaticResource BotonContorno}"
+                                            Command="{Binding DataContext.DescartarCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip="Quitar aviso" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Height="48" Margin="0,0,0,8" Content="Ver todos uno por uno" FontSize="15"
+                            Style="{StaticResource BotonContornoAcento}" Command="{Binding RestaurarTodasCommand}" />
+                </StackPanel>
+            </Border>
+
+            <Button Height="60" Padding="18,0" HorizontalAlignment="Left" HorizontalContentAlignment="Left"
+                    Style="{StaticResource BotonAcento}" Command="{Binding AlternarListaCommand}">
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="4" Opacity="0.45" />
+                </Button.Effect>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="AVISOS DE MESAS" FontSize="12" FontWeight="ExtraBold" Opacity="0.75" />
+                        <TextBlock Text="{Binding TextoMinimizadas}" FontSize="18" FontWeight="ExtraBold" />
+                    </StackPanel>
+                    <TextBlock Margin="16,0,0,0" VerticalAlignment="Center" FontSize="16" FontWeight="ExtraBold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="▲" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ListaAbierta}" Value="True">
+                                        <Setter Property="Text" Value="▼" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Grid.RowSpan="2" DataContext="{Binding BarraActividad}"
+              Visibility="{Binding PanelAbierto, Converter={StaticResource BoolAVisibilidad}}">
+            <Border Background="#66000000">
+                <Border.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding CerrarPanelCommand}" />
+                </Border.InputBindings>
+            </Border>
+
+            <Border Width="520" MaxHeight="560" Margin="0,52,20,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    CornerRadius="18" Background="{StaticResource Encabezado}" BorderBrush="{StaticResource Acento}" BorderThickness="2">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="24" ShadowDepth="4" Opacity="0.5" />
+                </Border.Effect>
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="18,12,10,6">
+                        <Button DockPanel.Dock="Right" Width="40" Height="40" MinHeight="40" Padding="0" Content="✕" FontSize="16"
+                                Style="{StaticResource BotonContorno}" Command="{Binding CerrarPanelCommand}" />
+                        <TextBlock Text="LO ÚLTIMO QUE PASÓ" FontSize="14" FontWeight="ExtraBold" VerticalAlignment="Center"
+                                   Foreground="{StaticResource Acento}" />
+                    </DockPanel>
+                    <TextBlock DockPanel.Dock="Bottom" Margin="18,4,18,12" FontSize="12" Foreground="{StaticResource TextoSuave}"
+                               Text="Toca un movimiento para ver la cuenta o el ticket." />
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="8,0" PanningMode="VerticalOnly">
+                        <ItemsControl ItemsSource="{Binding Movimientos}" VirtualizingPanel.IsVirtualizing="True">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:ActividadItem}">
+                                    <Button Style="{StaticResource BotonFila}" MinHeight="56" Padding="10,8" Margin="0,0,0,4"
+                                            Command="{Binding DataContext.AbrirCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="92" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Style="{StaticResource EtiquetaActividad}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,3,0,0">
+                                                <TextBlock Text="{Binding Etiqueta}" Style="{StaticResource TextoEtiquetaActividad}" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="{Binding Titulo}" FontSize="15" FontWeight="Bold" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Detalle}" FontSize="13" Foreground="{StaticResource TextoSuave}" TextWrapping="Wrap"
+                                                           Visibility="{Binding TieneDetalle, Converter={StaticResource BoolAVisibilidad}}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                                <TextBlock Text="{Binding Hora}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" />
+                                                <TextBlock Text="{Binding Espera}" FontSize="12" Foreground="{StaticResource TextoSuave}" HorizontalAlignment="Right" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.RowSpan="3" Background="#B3000000"
+              DataContext="{Binding Avisos}"
+              Visibility="{Binding MostrarModal, Converter={StaticResource BoolAVisibilidad}}">
+            <Border Width="600" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    CornerRadius="26" Background="{StaticResource Ticket}" ClipToBounds="True" Margin="0,24">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="40" ShadowDepth="6" Opacity="0.6" />
+                </Border.Effect>
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" CornerRadius="26,26,0,0" Padding="28,16">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{StaticResource Acento}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Actual.EsOrden}" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Verde}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Border.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{StaticResource TextoSobreAcento}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Actual.EsOrden}" Value="True">
+                                        <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Resources>
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding Actual.Espera}" FontSize="15" FontWeight="Bold"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Actual.TituloBanda}" FontSize="18" FontWeight="ExtraBold" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+
+                    <StackPanel DockPanel.Dock="Bottom" Margin="32,0,32,28">
+                        <Border Margin="0,0,0,16" Padding="14,10" CornerRadius="12" Background="{StaticResource TicketLinea}"
+                                Visibility="{Binding HayMasEnCola, Converter={StaticResource BoolAVisibilidad}}">
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Height="40" Margin="10,0,0,0" Padding="14,0" FontSize="14"
+                                        Content="Minimizar todos" Style="{StaticResource BotonChipTicket}"
+                                        Command="{Binding MinimizarTodasCommand}" />
+                                <TextBlock Text="{Binding TextoEnCola}" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"
+                                           Foreground="{StaticResource TicketTexto}" TextWrapping="Wrap" />
+                            </DockPanel>
+                        </Border>
+
+                        <StackPanel Visibility="{Binding Actual.EsCuenta, Converter={StaticResource BoolAVisibilidad}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Width="Auto" Height="60" FontSize="18" Content="Minimizar"
+                                        Style="{StaticResource BotonTicket}" Command="{Binding MinimizarCommand}"
+                                        ToolTip="Guardar el aviso abajo a la izquierda para atenderlo después" />
+                                <Button Grid.Column="2" Width="Auto" Height="60" FontSize="18" Content="Enterado"
+                                        Style="{StaticResource BotonTicket}" Command="{Binding EnteradoCommand}"
+                                        ToolTip="Cerrar el aviso" />
+                            </Grid>
+                            <Button Margin="0,12,0,0" Height="68" FontSize="22" Content="Ir a cobrar"
+                                    Style="{StaticResource BotonAcento}" Command="{Binding IrAMesaCommand}" />
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding Actual.EsOrden, Converter={StaticResource BoolAVisibilidad}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Width="Auto" Height="60" FontSize="18" Content="Minimizar"
+                                        Style="{StaticResource BotonTicket}" Command="{Binding MinimizarCommand}"
+                                        ToolTip="Guardar el aviso abajo a la izquierda para atenderlo después" />
+                                <Button Grid.Column="2" Width="Auto" Height="60" FontSize="18" Content="Ver mesa"
+                                        Style="{StaticResource BotonTicket}" Command="{Binding IrAMesaCommand}"
+                                        ToolTip="Abrir la cuenta de la mesa" />
+                            </Grid>
+                            <Button Margin="0,12,0,0" Height="68" FontSize="22" Content="Enterado, a preparar"
+                                    Style="{StaticResource BotonVerde}" Command="{Binding EnteradoCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Margin="32,20,32,18">
+                        <TextBlock Text="{Binding Actual.Mesa}" FontFamily="{StaticResource FuenteTitulo}" FontSize="52"
+                                   FontWeight="ExtraBold" Foreground="{StaticResource TicketTexto}"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Margin="0,2,0,0" FontSize="20" Foreground="{StaticResource TicketTextoSuave}">
+                            <Run Text="{Binding Actual.EtiquetaImporte, Mode=OneWay}" />
+                            <Run Text="{Binding Actual.Importe, Mode=OneWay}" FontSize="32" FontWeight="ExtraBold"
+                                 Foreground="{StaticResource TicketTexto}" />
+                        </TextBlock>
+                        <TextBlock Margin="0,6,0,0" Text="{Binding Actual.Detalle}" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TicketTextoSuave}" TextWrapping="Wrap" />
+
+                        <Border Margin="0,14,0,0" Padding="16,8" CornerRadius="14" Background="{StaticResource TicketBoton}"
+                                BorderBrush="{StaticResource TicketBotonBorde}" BorderThickness="2"
+                                Visibility="{Binding Actual.EsOrden, Converter={StaticResource BoolAVisibilidad}}">
+                            <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Actual.Productos}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type vm:ProductoAvisoItem}">
+                                            <Grid Margin="0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Texto}" FontSize="22" FontWeight="ExtraBold"
+                                                               Foreground="{StaticResource TicketTexto}" TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding Detalle}" FontSize="15" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TicketTextoSuave}" TextWrapping="Wrap"
+                                                               Visibility="{Binding TieneDetalle, Converter={StaticResource BoolAVisibilidad}}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Margin="12,0,0,0" Text="{Binding Importe}" FontSize="17" FontWeight="Bold"
+                                                           Foreground="{StaticResource TicketTextoSuave}" VerticalAlignment="Top" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.RowSpan="3" Background="#CC140C0A"
+              Visibility="{Binding Carga.Visible, Converter={StaticResource BoolAVisibilidad}}">
+            <controles:CargandoMiches Tamano="240" Texto="{Binding Carga.Texto}" />
+        </Grid>
+    </Grid>
+</Window>

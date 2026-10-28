@@ -1,0 +1,310 @@
+<UserControl x:Class="Miches360.Vistas.CorteVista"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Miches360.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:CorteViewModel}"
+             d:DesignWidth="1366" d:DesignHeight="696">
+
+    <UserControl.Resources>
+        <Style x:Key="Kpi" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Encabezado}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="18,12" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+
+        <Style x:Key="Panel" TargetType="Border" BasedOn="{StaticResource Tarjeta}">
+            <Setter Property="Padding" Value="18,16" />
+            <Setter Property="CornerRadius" Value="18" />
+        </Style>
+
+        <Style x:Key="TituloPanel" TargetType="TextBlock" BasedOn="{StaticResource Titulo}">
+            <Setter Property="FontSize" Value="21" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="18,14,18,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0">
+            <ItemsControl DockPanel.Dock="Left" ItemsSource="{Binding Modos}" VerticalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Height="52" Margin="0,0,8,0" Padding="18,0" FontSize="17"
+                                Content="{Binding Texto}" Style="{StaticResource BotonOpcion}"
+                                Command="{Binding DataContext.SeleccionarModoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Height="52" Padding="18,0" Margin="0,0,8,0" Content="Hoy"
+                        Style="{StaticResource BotonContornoAcento}" Command="{Binding HoyCommand}" />
+                <Button Width="52" Height="52" Margin="0,0,8,0" Content="↻" FontSize="22" ToolTip="Actualizar"
+                        Style="{StaticResource BotonContorno}" Command="{Binding ActualizarCommand}" />
+                <Button Height="52" Padding="16,0" Margin="0,0,8,0" Content="Ticket de corte"
+                        Style="{StaticResource BotonContorno}" Command="{Binding ImprimirTicketCommand}" />
+                <Button Height="52" Padding="16,0" Content="Imprimir reporte"
+                        Style="{StaticResource BotonAcento}" Command="{Binding ImprimirHojaCommand}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="16,0">
+                <Button Width="52" Height="52" Content="‹" FontSize="26"
+                        Style="{StaticResource BotonContorno}" Command="{Binding AnteriorCommand}" />
+                <TextBlock MinWidth="300" Margin="12,0" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"
+                           Text="{Binding TextoPeriodo}" Style="{StaticResource Titulo}" FontSize="24" />
+                <Button Width="52" Height="52" Content="›" FontSize="26"
+                        Style="{StaticResource BotonContorno}" Command="{Binding SiguienteCommand}" />
+            </StackPanel>
+        </DockPanel>
+
+        <StackPanel Grid.Row="1">
+            <Border Margin="0,12,0,0" Padding="14,10" CornerRadius="12" Background="{StaticResource Chip}"
+                    BorderBrush="{StaticResource Acento}" BorderThickness="2"
+                    Visibility="{Binding AvisoCuentasAbiertas, Converter={StaticResource ValorAVisibilidad}}">
+                <TextBlock Text="{Binding AvisoCuentasAbiertas}" TextWrapping="Wrap" FontSize="15" FontWeight="SemiBold" />
+            </Border>
+            <Border Style="{StaticResource Mensaje}"
+                    Visibility="{Binding Mensaje, Converter={StaticResource ValorAVisibilidad}}">
+                <TextBlock Text="{Binding Mensaje}" TextWrapping="Wrap" FontSize="15" FontWeight="SemiBold" />
+            </Border>
+        </StackPanel>
+
+        <UniformGrid Grid.Row="2" Rows="1" Columns="5" Margin="0,14,-12,14">
+            <Border Style="{StaticResource Kpi}" BorderBrush="{StaticResource Acento}">
+                <StackPanel>
+                    <TextBlock Text="VENTA TOTAL" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                    <TextBlock Text="{Binding TextoTotal}" Style="{StaticResource Titulo}" FontSize="36" Foreground="{StaticResource Acento}" />
+                    <TextBlock Text="{Binding TextoCanceladas, StringFormat='Sin contar {0}'}" FontSize="12" FontWeight="SemiBold"
+                               Foreground="{StaticResource RojoClaro}"
+                               Visibility="{Binding TextoCanceladas, Converter={StaticResource ValorAVisibilidad}}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Kpi}">
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding TextoPorcentajeEfectivo}" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                        <TextBlock Text="EFECTIVO" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                    </DockPanel>
+                    <TextBlock Text="{Binding TextoEfectivo}" Style="{StaticResource Titulo}" FontSize="32" Foreground="{StaticResource VerdeClaro}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Kpi}">
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding TextoPorcentajeTransferencia}" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                        <TextBlock Text="TRANSFERENCIA" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                    </DockPanel>
+                    <TextBlock Text="{Binding TextoTransferencia}" Style="{StaticResource Titulo}" FontSize="32" Foreground="{StaticResource AzulClaro}" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Kpi}">
+                <StackPanel>
+                    <TextBlock Text="COBROS" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                    <TextBlock Text="{Binding TextoCobros}" Style="{StaticResource Titulo}" FontSize="32" />
+                </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Kpi}">
+                <StackPanel>
+                    <TextBlock Text="TICKET PROMEDIO" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                    <TextBlock Text="{Binding TextoTicketPromedio}" Style="{StaticResource Titulo}" FontSize="32" />
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="400" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource Panel}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Por categoría" Style="{StaticResource TituloPanel}" />
+                    <Grid>
+                        <TextBlock Text="Sin ventas cobradas en este periodo." Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                   Visibility="{Binding SinVentas, Converter={StaticResource BoolAVisibilidad}}" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                            <ItemsControl ItemsSource="{Binding Categorias}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:CategoriaCorteItem}">
+                                        <StackPanel Margin="0,0,0,12">
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Right" Text="{Binding TextoImporte}" FontSize="17" FontWeight="ExtraBold" />
+                                                <TextBlock Text="{Binding Nombre}" FontSize="16" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
+                                            </DockPanel>
+                                            <Border Height="12" Margin="0,5,0,4" CornerRadius="6" HorizontalAlignment="Left"
+                                                    Width="{Binding AnchoBarra}" Background="{Binding ColorHex}" />
+                                            <TextBlock Text="{Binding TextoDetalle}" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Margin="0,0,12,0" Style="{StaticResource Panel}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Por producto" Style="{StaticResource TituloPanel}" />
+                    <Grid>
+                        <TextBlock Text="Aquí verás qué se vendió y cuánto dejó cada producto." Style="{StaticResource EtiquetaSuave}"
+                                   FontSize="15" TextWrapping="Wrap"
+                                   Visibility="{Binding SinVentas, Converter={StaticResource BoolAVisibilidad}}" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                            <ItemsControl ItemsSource="{Binding Productos}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:ProductoCorteItem}">
+                                        <Border Padding="0,8" BorderBrush="{StaticResource Borde}" BorderThickness="0,0,0,1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="46" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" VerticalAlignment="Center" FontSize="18" FontWeight="ExtraBold"
+                                                           Foreground="{StaticResource Acento}">
+                                                    <Run Text="{Binding Cantidad, Mode=OneWay}" /><Run Text="×" />
+                                                </TextBlock>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                    <TextBlock Text="{Binding Nombre}" FontSize="15" FontWeight="Bold" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding Tamano}" Style="{StaticResource EtiquetaSuave}" FontSize="12"
+                                                               Visibility="{Binding Tamano, Converter={StaticResource ValorAVisibilidad}}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding TextoImporte}"
+                                                           FontSize="16" FontWeight="ExtraBold" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Panel}"
+                    Visibility="{Binding MuestraPorDia, Converter={StaticResource BoolAVisibilidad}}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding TituloPorDia}" Style="{StaticResource TituloPanel}" />
+                    <Grid>
+                        <TextBlock Text="Sin ventas en este periodo." Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                   Visibility="{Binding SinVentas, Converter={StaticResource BoolAVisibilidad}}" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                            <ItemsControl ItemsSource="{Binding Dias}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:DiaCorteItem}">
+                                        <Border Padding="0,10" BorderBrush="{StaticResource Borde}" BorderThickness="0,0,0,1">
+                                            <StackPanel>
+                                                <DockPanel>
+                                                    <TextBlock DockPanel.Dock="Right" Text="{Binding TextoTotal}" FontSize="19" FontWeight="ExtraBold"
+                                                               Foreground="{StaticResource Acento}" />
+                                                    <TextBlock Text="{Binding Dia}" FontSize="17" FontWeight="Bold" />
+                                                </DockPanel>
+                                                <TextBlock Margin="0,3,0,0" Style="{StaticResource EtiquetaSuave}" FontSize="13">
+                                                    <Run Text="{Binding TextoCobros, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding TextoDesglose, Mode=OneWay}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Panel}"
+                    Visibility="{Binding EsDia, Converter={StaticResource BoolAVisibilidad}}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                    <StackPanel>
+                        <TextBlock Text="Arqueo de caja" Style="{StaticResource TituloPanel}" Margin="0,0,0,4" />
+                        <TextBlock Text="Cuenta el efectivo del cajón y compáralo con lo que debería haber."
+                                   Style="{StaticResource EtiquetaSuave}" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,12" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="12" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Fondo inicial" Style="{StaticResource EtiquetaSuave}" FontSize="13" Margin="0,0,0,4" />
+                                <TextBox Style="{StaticResource CampoTexto}" Text="{Binding FondoTexto, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Efectivo contado" Style="{StaticResource EtiquetaSuave}" FontSize="13" Margin="0,0,0,4" />
+                                <TextBox Style="{StaticResource CampoTexto}" Text="{Binding ContadoTexto, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Margin="0,12,0,0" Padding="14,10" CornerRadius="12" Background="{StaticResource Fondo}">
+                            <StackPanel>
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding TextoVentasEfectivo}" FontSize="15" FontWeight="Bold" />
+                                    <TextBlock Text="Ventas en efectivo" Style="{StaticResource EtiquetaSuave}" FontSize="14" />
+                                </DockPanel>
+                                <DockPanel Margin="0,0,0,4">
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding TextoEsperado}" FontSize="15" FontWeight="Bold" />
+                                    <TextBlock Text="Debe haber en caja" Style="{StaticResource EtiquetaSuave}" FontSize="14" />
+                                </DockPanel>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Right" Text="{Binding TextoDiferenciaArqueo}" Style="{StaticResource Titulo}"
+                                               FontSize="24" Foreground="{Binding ColorDiferenciaArqueo}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Diferencia" FontSize="15" FontWeight="Bold" />
+                                </DockPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="Notas (opcional)" Style="{StaticResource EtiquetaSuave}" FontSize="13" Margin="0,12,0,4" />
+                        <TextBox Style="{StaticResource CampoTexto}" Text="{Binding Notas, UpdateSourceTrigger=PropertyChanged}" MaxLength="200" />
+
+                        <Button Height="60" Margin="0,12,0,0" FontSize="18" Content="Guardar arqueo"
+                                Style="{StaticResource BotonVerde}" Command="{Binding RegistrarArqueoCommand}"
+                                IsEnabled="{Binding PuedeArquear}" />
+
+                        <TextBlock Text="Arqueos del día" Style="{StaticResource EtiquetaSuave}" FontSize="13" Margin="0,16,0,6"
+                                   Visibility="{Binding Arqueos.Count, Converter={StaticResource ValorAVisibilidad}}" />
+                        <ItemsControl ItemsSource="{Binding Arqueos}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:ArqueoItem}">
+                                    <Border Margin="0,0,0,8" Padding="12,8" CornerRadius="10" Background="{StaticResource Chip}">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <TextBlock DockPanel.Dock="Right" Text="{Binding TextoDiferencia}" FontSize="15" FontWeight="ExtraBold"
+                                                           Foreground="{Binding ColorDiferencia}" />
+                                                <TextBlock Text="{Binding Encabezado}" FontSize="14" FontWeight="Bold" />
+                                            </DockPanel>
+                                            <TextBlock Text="{Binding TextoDetalle}" Style="{StaticResource EtiquetaSuave}" FontSize="12" />
+                                            <TextBlock Text="{Binding Notas}" Style="{StaticResource EtiquetaSuave}" FontSize="12" TextWrapping="Wrap"
+                                                       Visibility="{Binding Notas, Converter={StaticResource ValorAVisibilidad}}" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

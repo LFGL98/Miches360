@@ -1,0 +1,277 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colores.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="BotonBase" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource Tile}" />
+        <Setter Property="Foreground" Value="{StaticResource Texto}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{StaticResource FuenteTexto}" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Marco"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="14"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Marco" Property="Opacity" Value="0.72" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Marco" Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BotonChip" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource Chip}" />
+    </Style>
+
+    <Style x:Key="BotonAcento" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource Acento}" />
+        <Setter Property="Foreground" Value="{StaticResource TextoSobreAcento}" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+    </Style>
+
+    <Style x:Key="BotonContorno" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+        <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <Style x:Key="BotonContornoAcento" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Acento}" />
+        <Setter Property="Foreground" Value="{StaticResource Acento}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+    </Style>
+
+    <Style x:Key="BotonVerde" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource Verde}" />
+        <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+    </Style>
+
+    <Style x:Key="BotonAzul" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource Azul}" />
+        <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+    </Style>
+
+    <Style x:Key="BotonCancelarTicket" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Rojo}" />
+        <Setter Property="Foreground" Value="{StaticResource Rojo}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+    </Style>
+
+    <Style x:Key="BotonEliminar" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Rojo}" />
+        <Setter Property="Foreground" Value="{StaticResource RojoClaro}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ConfirmandoEliminar}" Value="True">
+                <Setter Property="Background" Value="{StaticResource Rojo}" />
+                <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="BotonTicket" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource TicketBoton}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TicketBotonBorde}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="{StaticResource TicketTexto}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style x:Key="BotonTecla" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource Tile}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="4" />
+    </Style>
+
+    <Style x:Key="Titulo" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FuenteTitulo}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="Foreground" Value="{StaticResource Texto}" />
+    </Style>
+
+    <Style x:Key="EtiquetaSuave" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextoSuave}" />
+    </Style>
+
+    <Style x:Key="BotonOpcion" TargetType="Button" BasedOn="{StaticResource BotonContorno}">
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Margin" Value="0,0,8,8" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="FontSize" Value="15" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding EstaSeleccionada}" Value="True">
+                <Setter Property="Background" Value="{StaticResource Acento}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Acento}" />
+                <Setter Property="Foreground" Value="{StaticResource TextoSobreAcento}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="BotonColor" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="46" />
+        <Setter Property="Margin" Value="0,0,8,8" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="{Binding ColorHex}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding EstaSeleccionada}" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource Texto}" />
+                <Setter Property="BorderThickness" Value="4" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="BotonFila" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="Margin" Value="0,0,0,6" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="MinHeight" Value="58" />
+    </Style>
+
+    <Style x:Key="Tarjeta" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Encabezado}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="22" />
+        <Setter Property="Padding" Value="22,20" />
+    </Style>
+
+    <Style x:Key="Mensaje" TargetType="Border">
+        <Setter Property="Margin" Value="0,12,0,0" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="{StaticResource Verde}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding MensajeEsError}" Value="True">
+                <Setter Property="Background" Value="{StaticResource Rojo}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CampoTexto" TargetType="TextBox">
+        <Setter Property="Height" Value="52" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="{StaticResource Fondo}" />
+        <Setter Property="Foreground" Value="{StaticResource Texto}" />
+        <Setter Property="CaretBrush" Value="{StaticResource Texto}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="12">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CampoTicket" TargetType="TextBox" BasedOn="{StaticResource CampoTexto}">
+        <Setter Property="Background" Value="{StaticResource TicketBoton}" />
+        <Setter Property="Foreground" Value="{StaticResource TicketTexto}" />
+        <Setter Property="CaretBrush" Value="{StaticResource TicketTexto}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TicketBotonBorde}" />
+    </Style>
+
+    <Style x:Key="CampoPinTicket" TargetType="PasswordBox">
+        <Setter Property="Height" Value="52" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="MaxLength" Value="6" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="{StaticResource TicketBoton}" />
+        <Setter Property="Foreground" Value="{StaticResource TicketTexto}" />
+        <Setter Property="CaretBrush" Value="{StaticResource TicketTexto}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TicketBotonBorde}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="12">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BotonChipTicket" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="{StaticResource TicketBoton}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TicketBotonBorde}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="{StaticResource TicketTexto}" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Height" Value="46" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Margin" Value="0,0,8,8" />
+    </Style>
+
+    <Style x:Key="BotonSobreMensaje" TargetType="Button" BasedOn="{StaticResource BotonBase}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Blanco}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Foreground" Value="{StaticResource Blanco}" />
+        <Setter Property="FontWeight" Value="ExtraBold" />
+        <Setter Property="Height" Value="46" />
+        <Setter Property="Padding" Value="16,0" />
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Nucleo/">
+    <Project Path="Miches360.Dominio/Miches360.Dominio.csproj" />
+    <Project Path="Miches360.Aplicacion/Miches360.Aplicacion.csproj" />
+  </Folder>
+  <Folder Name="/Infraestructura/">
+    <Project Path="Miches360.Infraestructura/Miches360.Infraestructura.csproj" />
+    <Project Path="Miches360.Servidor/Miches360.Servidor.csproj" />
+  </Folder>
+  <Folder Name="/Presentacion/">
+    <Project Path="Miches360/Miches360.csproj" />
+  </Folder>
+</Solution>

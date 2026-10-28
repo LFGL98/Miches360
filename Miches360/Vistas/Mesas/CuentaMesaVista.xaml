@@ -1,0 +1,230 @@
+<UserControl x:Class="Miches360.Vistas.CuentaMesaVista"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Miches360.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:CuentaMesaViewModel}"
+             d:DesignWidth="1366" d:DesignHeight="696">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource Encabezado}" BorderBrush="{StaticResource Borde}" BorderThickness="0,0,0,1"
+                Padding="16,10">
+            <DockPanel>
+                <Button DockPanel.Dock="Left" Height="52" Padding="18,0" Margin="0,0,14,0"
+                        Content="‹ Mesas" Style="{StaticResource BotonContorno}"
+                        Command="{Binding VolverCommand}" />
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Height="52" Padding="18,0" Margin="0,0,8,0"
+                            Content="Quitar producto" Style="{StaticResource BotonCancelarTicket}"
+                            Command="{Binding QuitarSeleccionadoCommand}"
+                            Visibility="{Binding HaySeleccion, Converter={StaticResource BoolAVisibilidad}}" />
+                    <Button Height="52" Padding="18,0" Margin="0,0,8,0"
+                            Content="Imprimir cuenta" Style="{StaticResource BotonContorno}"
+                            Command="{Binding ImprimirCuentaCommand}" />
+                    <Button Height="52" Padding="18,0" Margin="0,0,8,0"
+                            Content="+ Persona" Style="{StaticResource BotonContornoAcento}"
+                            Command="{Binding AgregarPersonaCommand}" />
+                    <Button Height="52" Padding="18,0"
+                            Content="Agregar productos" Style="{StaticResource BotonAcento}"
+                            Command="{Binding AgregarProductosCommand}" />
+                </StackPanel>
+                <TextBlock VerticalAlignment="Center" Text="{Binding Titulo}" Style="{StaticResource Titulo}" FontSize="24" />
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="18,12,18,0">
+            <Border Style="{StaticResource Mensaje}" Margin="0"
+                    Visibility="{Binding Mensaje, Converter={StaticResource ValorAVisibilidad}}">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Margin="12,0,0,0" Content="Imprimir ticket"
+                            Style="{StaticResource BotonSobreMensaje}"
+                            Command="{Binding ImprimirTicketCobradoCommand}"
+                            Visibility="{Binding TicketPorImprimir, Converter={StaticResource ValorAVisibilidad}}" />
+                    <TextBlock Text="{Binding Mensaje}" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="SemiBold" FontSize="15" />
+                </DockPanel>
+            </Border>
+            <TextBlock Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                       Text="Toca un producto para pasarlo a otra persona o quitarlo. Cada persona se cobra con su botón."
+                       Visibility="{Binding Mensaje, Converter={StaticResource ValorAVisibilidad}, ConverterParameter=invertir}" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" Margin="18,12,0,0"
+                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                      PanningMode="HorizontalOnly">
+            <ItemsControl ItemsSource="{Binding Columnas}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:PersonaColumna}">
+                        <Border Width="300" Margin="0,0,14,12" CornerRadius="18" BorderThickness="2">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="{StaticResource Ticket}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource Ticket}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Persona.Pagada}" Value="True">
+                                            <Setter Property="Background" Value="#E4EDE2" />
+                                            <Setter Property="BorderBrush" Value="#C7D8C5" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding PuedeRecibir}" Value="True">
+                                            <Setter Property="BorderBrush" Value="{StaticResource Acento}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" Padding="16,12" BorderBrush="{StaticResource TicketLinea}" BorderThickness="0,0,0,1">
+                                    <Grid>
+                                        <DockPanel Visibility="{Binding EditandoNombre, Converter={StaticResource BoolAVisibilidad}, ConverterParameter=invertir}">
+                                            <Border DockPanel.Dock="Right" Padding="8,3" CornerRadius="8" Background="{StaticResource Verde}"
+                                                    VerticalAlignment="Center"
+                                                    Visibility="{Binding Persona.Pagada, Converter={StaticResource BoolAVisibilidad}}">
+                                                <TextBlock Text="PAGADO" FontSize="12" FontWeight="ExtraBold" Foreground="{StaticResource Blanco}" />
+                                            </Border>
+                                            <Button DockPanel.Dock="Right" Height="40" Margin="8,0,0,0" Padding="12,0" FontSize="14"
+                                                    Content="Nombre" Style="{StaticResource BotonChipTicket}"
+                                                    VerticalAlignment="Center"
+                                                    Command="{Binding DataContext.EditarNombreCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" />
+                                            <TextBlock Text="{Binding Persona.Nombre}" FontSize="20" FontWeight="ExtraBold" VerticalAlignment="Center"
+                                                       Foreground="{StaticResource TicketTexto}" TextTrimming="CharacterEllipsis" />
+                                        </DockPanel>
+
+                                        <StackPanel Visibility="{Binding EditandoNombre, Converter={StaticResource BoolAVisibilidad}}">
+                                            <TextBox Style="{StaticResource CampoTicket}" MaxLength="40"
+                                                     Text="{Binding NombreNuevo, UpdateSourceTrigger=PropertyChanged}" />
+                                            <UniformGrid Columns="2" Margin="0,8,0,0">
+                                                <Button Height="46" Margin="0,0,4,0" Content="Cancelar" Style="{StaticResource BotonChipTicket}"
+                                                        Command="{Binding DataContext.CancelarNombreCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}" />
+                                                <Button Height="46" Margin="4,0,0,0" Content="Guardar" Style="{StaticResource BotonVerde}"
+                                                        Command="{Binding DataContext.GuardarNombreCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}" />
+                                            </UniformGrid>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                                    <StackPanel Margin="10,8">
+                                        <ItemsControl ItemsSource="{Binding Renglones}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="{x:Type vm:RenglonItem}">
+                                                    <Button Margin="0,0,0,6" Padding="10,8" MinHeight="54"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            Command="{Binding DataContext.SeleccionarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}">
+                                                        <Button.Style>
+                                                            <Style TargetType="Button" BasedOn="{StaticResource BotonBase}">
+                                                                <Setter Property="Background" Value="{StaticResource TicketBoton}" />
+                                                                <Setter Property="BorderBrush" Value="{StaticResource TicketBotonBorde}" />
+                                                                <Setter Property="BorderThickness" Value="1" />
+                                                                <Setter Property="Foreground" Value="{StaticResource TicketTexto}" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding EstaSeleccionado}" Value="True">
+                                                                        <Setter Property="Background" Value="{StaticResource TicketTexto}" />
+                                                                        <Setter Property="BorderBrush" Value="{StaticResource TicketTexto}" />
+                                                                        <Setter Property="Foreground" Value="{StaticResource Ticket}" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Pagado}" Value="True">
+                                                                        <Setter Property="Background" Value="Transparent" />
+                                                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Button.Style>
+                                                        <DockPanel>
+                                                            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="8,0,0,0"
+                                                                       Text="{Binding Renglon.Importe, StringFormat='{}{0:$#,0.##}'}"
+                                                                       FontSize="16" FontWeight="ExtraBold" />
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding Texto}" FontSize="15" FontWeight="Bold" TextWrapping="Wrap" />
+                                                                <TextBlock Text="{Binding Detalle}" FontSize="12" FontWeight="SemiBold" Opacity="0.75"
+                                                                           Visibility="{Binding Detalle, Converter={StaticResource ValorAVisibilidad}}" />
+                                                            </StackPanel>
+                                                        </DockPanel>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+
+                                        <TextBlock Margin="6,10" Text="Sin productos" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource TicketTextoSuave}"
+                                                   Visibility="{Binding Renglones.Count, Converter={StaticResource ValorAVisibilidad}, ConverterParameter=invertir}" />
+
+                                        <Button Margin="0,6,0,0" Height="52" Content="Pasar aquí"
+                                                Style="{StaticResource BotonAcento}"
+                                                Command="{Binding DataContext.MoverAquiCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding PuedeRecibir, Converter={StaticResource BoolAVisibilidad}}" />
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                                <Border Grid.Row="2" Padding="14,10,14,14" BorderBrush="{StaticResource TicketBotonBorde}" BorderThickness="0,2,0,0">
+                                    <StackPanel>
+                                        <DockPanel Margin="0,0,0,8">
+                                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Text="Total"
+                                                       FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TicketTextoSuave}" />
+                                            <TextBlock HorizontalAlignment="Right" Text="{Binding Persona.Total, StringFormat='{}{0:$#,0.##}'}"
+                                                       Style="{StaticResource Titulo}" FontSize="32" Foreground="{StaticResource TicketTexto}" />
+                                        </DockPanel>
+                                        <Button Height="60" FontSize="18" Content="{Binding TextoCobrar}"
+                                                Style="{StaticResource BotonVerde}"
+                                                IsEnabled="{Binding PuedeCobrar}"
+                                                Command="{Binding DataContext.CobrarPersonaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Persona.Pagada, Converter={StaticResource BoolAVisibilidad}, ConverterParameter=invertir}" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Border Grid.Row="3" Background="{StaticResource Encabezado}" BorderBrush="{StaticResource Borde}" BorderThickness="0,1,0,0"
+                Padding="20,12">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Height="64" Padding="28,0" FontSize="19"
+                        Content="Cobrar todo lo pendiente" Style="{StaticResource BotonVerde}"
+                        Command="{Binding CobrarTodoCommand}" />
+                <Button DockPanel.Dock="Right" Height="64" Padding="24,0" Margin="0,0,10,0" FontSize="18"
+                        Content="Partes iguales" Style="{StaticResource BotonContornoAcento}"
+                        Command="{Binding PartesIgualesCommand}" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,32,0">
+                        <TextBlock Text="TOTAL MESA" Style="{StaticResource EtiquetaSuave}" FontSize="12" />
+                        <TextBlock Text="{Binding TextoTotal}" FontSize="24" FontWeight="ExtraBold" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,32,0">
+                        <TextBlock Text="PAGADO" Style="{StaticResource EtiquetaSuave}" FontSize="12" />
+                        <TextBlock Text="{Binding TextoPagado}" FontSize="24" FontWeight="ExtraBold" Foreground="{StaticResource VerdeClaro}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="PENDIENTE" Style="{StaticResource EtiquetaSuave}" FontSize="12" />
+                        <TextBlock Text="{Binding TextoPendiente}" Style="{StaticResource Titulo}" FontSize="34" Foreground="{StaticResource Acento}" />
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

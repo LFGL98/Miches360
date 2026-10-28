@@ -1,0 +1,177 @@
+<UserControl x:Class="Miches360.Vistas.VentaVista"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Miches360.ViewModels"
+             xmlns:vistas="clr-namespace:Miches360.Vistas"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:VentaViewModel}"
+             d:DesignWidth="1366" d:DesignHeight="696">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="390" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <vistas:SelectorProductosVista DataContext="{Binding Selector}" />
+
+            <Border Margin="156,0,16,16" Padding="18,14" CornerRadius="12"
+                    VerticalAlignment="Bottom"
+                    Background="{StaticResource Verde}"
+                    Visibility="{Binding MensajeExito, Converter={StaticResource ValorAVisibilidad}}">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Margin="12,0,0,0" Content="Imprimir ticket"
+                            Style="{StaticResource BotonSobreMensaje}"
+                            Command="{Binding ImprimirTicketCommand}"
+                            Visibility="{Binding UltimoTicket, Converter={StaticResource ValorAVisibilidad}}" />
+                    <TextBlock Text="{Binding MensajeExito}" VerticalAlignment="Center" TextWrapping="Wrap"
+                               Foreground="{StaticResource Blanco}"
+                               FontSize="18" FontWeight="Bold" />
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <Border Grid.Column="1" Background="{StaticResource Ticket}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Padding="20,18,20,12" BorderBrush="{StaticResource TicketLinea}" BorderThickness="0,0,0,1">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Right" VerticalAlignment="Bottom"
+                                   Text="Para llevar"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TicketTextoSuave}" />
+                        <TextBlock Text="TICKET" Style="{StaticResource Titulo}" FontSize="26"
+                                   Foreground="{StaticResource TicketTexto}" />
+                    </DockPanel>
+                </Border>
+
+                <Grid Grid.Row="1">
+                    <TextBlock Text="Toca una bebida o producto para agregarlo"
+                               Margin="24"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontSize="16"
+                               Foreground="{StaticResource TicketTextoSuave}"
+                               Visibility="{Binding Lineas.Count, Converter={StaticResource ValorAVisibilidad}, ConverterParameter=invertir}" />
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                        <ItemsControl Margin="20,4" ItemsSource="{Binding Lineas}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:LineaTicket}">
+                                    <Border Padding="0,12" BorderBrush="{StaticResource TicketLinea}" BorderThickness="0,0,0,1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="34" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="72" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Grid.Column="0" Margin="0,0,8,0" Padding="0" MinHeight="0"
+                                                    HorizontalContentAlignment="Stretch" Background="Transparent"
+                                                    Style="{StaticResource BotonBase}"
+                                                    Command="{Binding DataContext.EditarNotaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Nombre}" TextWrapping="Wrap"
+                                                               FontSize="17" FontWeight="ExtraBold"
+                                                               Foreground="{StaticResource TicketTexto}" />
+                                                    <TextBlock Text="{Binding Detalle}" FontSize="14" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TicketTextoSuave}"
+                                                               Visibility="{Binding Detalle, Converter={StaticResource ValorAVisibilidad}}" />
+                                                    <TextBlock Text="{Binding TextoNota}" FontSize="13" TextWrapping="Wrap">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="{StaticResource TicketTextoSuave}" />
+                                                                <Setter Property="FontWeight" Value="SemiBold" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding TieneNota}" Value="True">
+                                                                        <Setter Property="Foreground" Value="{StaticResource Rojo}" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button Grid.Column="1" Content="−"
+                                                    Style="{StaticResource BotonTicket}"
+                                                    ToolTip="Quitar uno"
+                                                    Command="{Binding DataContext.DecrementarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Cantidad}"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       FontSize="18" FontWeight="ExtraBold"
+                                                       Foreground="{StaticResource TicketTexto}" />
+                                            <Button Grid.Column="3" Content="+"
+                                                    Style="{StaticResource BotonTicket}"
+                                                    ToolTip="Agregar uno"
+                                                    Command="{Binding DataContext.IncrementarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" />
+                                            <TextBlock Grid.Column="4"
+                                                       Text="{Binding Importe, StringFormat='{}{0:$#,0.##}'}"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                       FontSize="18" FontWeight="ExtraBold"
+                                                       Foreground="{StaticResource TicketTexto}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+
+                <Border Grid.Row="2" Padding="20,16,20,20" BorderBrush="{StaticResource TicketBotonBorde}" BorderThickness="0,2,0,0">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,12">
+                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
+                                       FontSize="17" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TicketTextoSuave}">
+                                <Run Text="Total ·" />
+                                <Run Text="{Binding Articulos, Mode=OneWay}" />
+                                <Run Text="art." />
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Right"
+                                       Text="{Binding Total, StringFormat='{}{0:$#,0.##}'}"
+                                       Style="{StaticResource Titulo}"
+                                       FontSize="46"
+                                       Foreground="{StaticResource TicketTexto}" />
+                        </DockPanel>
+
+                        <UniformGrid Columns="2" Margin="0,0,0,10">
+                            <Button Height="76" Margin="0,0,5,0"
+                                    Content="Efectivo" FontSize="20"
+                                    Style="{StaticResource BotonVerde}"
+                                    Command="{Binding CobrarEfectivoCommand}" />
+                            <Button Height="76" Margin="5,0,0,0"
+                                    Content="Transferencia" FontSize="20"
+                                    Style="{StaticResource BotonAzul}"
+                                    Command="{Binding CobrarTransferenciaCommand}" />
+                        </UniformGrid>
+
+                        <Button Height="50"
+                                Content="Cancelar ticket"
+                                Style="{StaticResource BotonCancelarTicket}"
+                                Command="{Binding CancelarTicketCommand}" />
+                    </StackPanel>
+                </Border>
+
+                <vistas:EditorNotaVista Grid.RowSpan="3" DataContext="{Binding EditorNota}"
+                                        Visibility="{Binding Abierto, Converter={StaticResource BoolAVisibilidad}}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

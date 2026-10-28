@@ -1,0 +1,40 @@
+<UserControl x:Class="Miches360.Controles.CargandoMiches"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             IsHitTestVisible="False">
+
+    <UserControl.Resources>
+        <Storyboard x:Key="Puntos" RepeatBehavior="Forever">
+            <StringAnimationUsingKeyFrames Storyboard.TargetName="Puntos" Storyboard.TargetProperty="Text" Duration="0:0:1.4">
+                <DiscreteStringKeyFrame KeyTime="0:0:0" Value="" />
+                <DiscreteStringKeyFrame KeyTime="0:0:0.35" Value="." />
+                <DiscreteStringKeyFrame KeyTime="0:0:0.7" Value=".." />
+                <DiscreteStringKeyFrame KeyTime="0:0:1.05" Value="..." />
+            </StringAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid x:Name="Marco" Width="260" Height="260">
+            <Viewbox>
+                <Canvas x:Name="Ventana" Width="340" Height="340" ClipToBounds="True" Background="#1E1310">
+                    <Image x:Name="Hoja" Stretch="None" RenderOptions.BitmapScalingMode="Linear">
+                        <Image.RenderTransform>
+                            <TranslateTransform x:Name="Desplazamiento" />
+                        </Image.RenderTransform>
+                    </Image>
+                </Canvas>
+            </Viewbox>
+            <Border CornerRadius="24" BorderThickness="3" BorderBrush="{StaticResource Acento}" />
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+            <TextBlock Text="Cargando" FontFamily="{StaticResource FuenteTitulo}" FontSize="30" FontWeight="ExtraBold"
+                       Foreground="{StaticResource Acento}" />
+            <TextBlock x:Name="Puntos" Width="30" FontFamily="{StaticResource FuenteTitulo}" FontSize="30" FontWeight="ExtraBold"
+                       Foreground="{StaticResource Acento}" />
+        </StackPanel>
+        <TextBlock x:Name="Etiqueta" Margin="0,2,0,0" HorizontalAlignment="Center" TextAlignment="Center"
+                   FontSize="17" FontWeight="SemiBold" Foreground="{StaticResource TextoSuave}" TextWrapping="Wrap" MaxWidth="360" />
+    </StackPanel>
+</UserControl>

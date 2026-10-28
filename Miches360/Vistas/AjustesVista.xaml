@@ -1,0 +1,373 @@
+<UserControl x:Class="Miches360.Vistas.AjustesVista"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Miches360.ViewModels"
+             xmlns:vistas="clr-namespace:Miches360.Vistas"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:AjustesViewModel}"
+             d:DesignWidth="1366" d:DesignHeight="696">
+
+    <UserControl.Resources>
+        <Style x:Key="Tarjeta" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource Encabezado}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Padding" Value="26,22" />
+        </Style>
+
+        <Style x:Key="CampoPin" TargetType="PasswordBox">
+            <Setter Property="Height" Value="52" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{StaticResource Fondo}" />
+            <Setter Property="Foreground" Value="{StaticResource Texto}" />
+            <Setter Property="CaretBrush" Value="{StaticResource Texto}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Borde}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="MaxLength" Value="6" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Mensaje" TargetType="Border">
+            <Setter Property="Margin" Value="0,12,0,0" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Background" Value="{StaticResource Verde}" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid Visibility="{Binding Sesion.Activa, Converter={StaticResource BoolAVisibilidad}, ConverterParameter=invertir}">
+            <vistas:AccesoAdminVista DataContext="{Binding Acceso}" />
+        </Grid>
+
+        <Grid Margin="24,20"
+              Visibility="{Binding Sesion.Activa, Converter={StaticResource BoolAVisibilidad}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0" Margin="0,0,0,18">
+                <Button DockPanel.Dock="Right" Height="52" Padding="22,0"
+                        Content="Bloquear" Style="{StaticResource BotonContorno}"
+                        Command="{Binding BloquearCommand}" />
+                <TextBlock Text="AJUSTES DEL NEGOCIO" Style="{StaticResource Titulo}" FontSize="32"
+                           VerticalAlignment="Center" />
+            </DockPanel>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                <StackPanel Margin="0,0,0,20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="2*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource Tarjeta}" VerticalAlignment="Top">
+                            <StackPanel>
+                                <TextBlock Text="Datos para transferencias" Style="{StaticResource Titulo}" FontSize="24"
+                                           Foreground="{StaticResource Acento}" />
+                                <TextBlock Margin="0,4,0,16" TextWrapping="Wrap" Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                           Text="Es lo que se muestra al cliente cuando paga por transferencia." />
+
+                                <TextBlock Text="Banco" Style="{StaticResource EtiquetaSuave}" Margin="0,0,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="60"
+                                         Text="{Binding Banco, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="CLABE (18 dígitos) o número de tarjeta (16 dígitos)"
+                                           Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="24" InputScope="Number"
+                                         Text="{Binding Clabe, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="A nombre de" Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="80"
+                                         Text="{Binding Titular, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <Button Margin="0,20,0,0" Height="64" FontSize="19"
+                                        Content="Guardar datos de transferencia"
+                                        Style="{StaticResource BotonVerde}"
+                                        Command="{Binding GuardarDatosCommand}" />
+
+                                <Border Visibility="{Binding MensajeDatos, Converter={StaticResource ValorAVisibilidad}}">
+                                    <Border.Style>
+                                        <Style TargetType="Border" BasedOn="{StaticResource Mensaje}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MensajeDatosEsError}" Value="True">
+                                                    <Setter Property="Background" Value="{StaticResource Rojo}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding MensajeDatos}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{StaticResource Tarjeta}" VerticalAlignment="Top">
+                            <StackPanel>
+                                <TextBlock Text="PIN de administrador" Style="{StaticResource Titulo}" FontSize="24"
+                                           Foreground="{StaticResource Acento}" />
+                                <TextBlock Margin="0,4,0,16" TextWrapping="Wrap" Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                           Text="De 4 a 6 números. Protege el catálogo, las mesas y estos ajustes." />
+
+                                <Border Margin="0,0,0,14" Padding="12,10" CornerRadius="12" Background="{StaticResource Rojo}"
+                                        Visibility="{Binding PinEsInicial, Converter={StaticResource BoolAVisibilidad}}">
+                                    <TextBlock TextWrapping="Wrap" FontWeight="SemiBold"
+                                               Text="Sigues usando el PIN de fábrica. Cámbialo ahora." />
+                                </Border>
+
+                                <TextBlock Text="Nuevo PIN" Style="{StaticResource EtiquetaSuave}" Margin="0,0,0,6" />
+                                <PasswordBox x:Name="CampoNuevoPin" Style="{StaticResource CampoPin}"
+                                             PasswordChanged="AlCambiarNuevoPin" />
+
+                                <TextBlock Text="Confirmar nuevo PIN" Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,6" />
+                                <PasswordBox x:Name="CampoConfirmarPin" Style="{StaticResource CampoPin}"
+                                             PasswordChanged="AlCambiarConfirmarPin" />
+
+                                <Button Margin="0,20,0,0" Height="64" FontSize="19"
+                                        Content="Cambiar PIN"
+                                        Style="{StaticResource BotonAcento}"
+                                        Command="{Binding CambiarPinCommand}" />
+
+                                <Border Visibility="{Binding MensajePin, Converter={StaticResource ValorAVisibilidad}}">
+                                    <Border.Style>
+                                        <Style TargetType="Border" BasedOn="{StaticResource Mensaje}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MensajePinEsError}" Value="True">
+                                                    <Setter Property="Background" Value="{StaticResource Rojo}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding MensajePin}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Border Margin="0,20,0,0" Style="{StaticResource Tarjeta}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Ticket e impresora" Style="{StaticResource Titulo}" FontSize="24"
+                                           Foreground="{StaticResource Acento}" />
+                                <TextBlock Margin="0,4,0,16" TextWrapping="Wrap" Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                           Text="Lo que se imprime arriba y abajo de cada ticket." />
+
+                                <TextBlock Text="Nombre en el ticket (vacío = Miches 360)" Style="{StaticResource EtiquetaSuave}" Margin="0,0,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="60"
+                                         Text="{Binding NombreTicket, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="Dirección" Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="120"
+                                         Text="{Binding Direccion, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="Teléfono" Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="30" InputScope="TelephoneNumber"
+                                         Text="{Binding Telefono, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock Text="Mensaje al pie" Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,6" />
+                                <TextBox Style="{StaticResource CampoTexto}" MaxLength="120"
+                                         Text="{Binding PieTicket, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <DockPanel Margin="0,0,0,8">
+                                    <Button DockPanel.Dock="Right" Height="44" Padding="16,0"
+                                            Content="Actualizar lista" Style="{StaticResource BotonContorno}" FontSize="14"
+                                            Command="{Binding RecargarImpresorasCommand}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Impresora de tickets" Style="{StaticResource EtiquetaSuave}" />
+                                </DockPanel>
+                                <ItemsControl ItemsSource="{Binding Impresoras}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding Texto}" Style="{StaticResource BotonOpcion}" MaxWidth="420"
+                                                    Command="{Binding DataContext.ElegirImpresoraCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <TextBlock Text="Ancho del rollo" Style="{StaticResource EtiquetaSuave}" Margin="0,10,0,8" />
+                                <ItemsControl ItemsSource="{Binding Anchos}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding Texto}" Style="{StaticResource BotonOpcion}" MinWidth="110"
+                                                    Command="{Binding DataContext.ElegirAnchoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+
+                                <TextBlock Text="Logo arriba del ticket" Style="{StaticResource EtiquetaSuave}" Margin="0,10,0,8" />
+                                <ItemsControl ItemsSource="{Binding OpcionesLogo}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding Texto}" Style="{StaticResource BotonOpcion}" MinWidth="130"
+                                                    Command="{Binding DataContext.ElegirLogoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <UniformGrid Columns="2" Margin="0,12,0,0">
+                                    <Button Height="60" Margin="0,0,6,0" FontSize="17"
+                                            Content="Imprimir prueba" Style="{StaticResource BotonContornoAcento}"
+                                            Command="{Binding ImprimirPruebaCommand}" />
+                                    <Button Height="60" Margin="6,0,0,0" FontSize="17"
+                                            Content="Guardar ticket" Style="{StaticResource BotonVerde}"
+                                            Command="{Binding GuardarTicketCommand}" />
+                                </UniformGrid>
+
+                                <Border Visibility="{Binding MensajeTicket, Converter={StaticResource ValorAVisibilidad}}">
+                                    <Border.Style>
+                                        <Style TargetType="Border" BasedOn="{StaticResource Mensaje}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MensajeTicketEsError}" Value="True">
+                                                    <Setter Property="Background" Value="{StaticResource Rojo}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding MensajeTicket}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Margin="0,20,0,0" Style="{StaticResource Tarjeta}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Celulares de meseros" Style="{StaticResource Titulo}" FontSize="24"
+                                           Foreground="{StaticResource Acento}" />
+                                <TextBlock Margin="0,4,0,14" TextWrapping="Wrap" Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                           Text="En la app del mesero escribe la dirección de la caja, este código y su nombre." />
+
+                                <DockPanel Margin="0,0,0,10">
+                                    <Border DockPanel.Dock="Left" Width="14" Height="14" CornerRadius="7" Margin="0,0,10,0" VerticalAlignment="Center">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{StaticResource Rojo}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ServidorActivo}" Value="True">
+                                                        <Setter Property="Background" Value="{StaticResource VerdeClaro}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                    <TextBlock Text="{Binding EstadoServidor}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                </DockPanel>
+
+                                <TextBlock Text="Dirección de la caja" Style="{StaticResource EtiquetaSuave}" Margin="0,4,0,4" />
+                                <TextBlock Text="{Binding Direcciones}" FontSize="22" FontWeight="ExtraBold" TextWrapping="Wrap"
+                                           Foreground="{StaticResource Texto}" />
+
+                                <TextBlock Text="Código para vincular" Style="{StaticResource EtiquetaSuave}" Margin="0,14,0,4" />
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right" Height="48" Padding="16,0" Content="Código nuevo"
+                                            Style="{StaticResource BotonContorno}" Command="{Binding NuevoCodigoCommand}" />
+                                    <TextBlock Text="{Binding CodigoVinculacion}" Style="{StaticResource Titulo}" FontSize="44"
+                                               Foreground="{StaticResource Acento}" VerticalAlignment="Center" />
+                                </DockPanel>
+
+                                <Button Margin="0,16,0,0" Height="52" Content="Permitir celulares en el firewall"
+                                        Style="{StaticResource BotonContornoAcento}" Command="{Binding PermitirFirewallCommand}" />
+                                <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Style="{StaticResource EtiquetaSuave}" FontSize="13"
+                                           Text="Solo una vez por laptop. Windows pedirá permiso de administrador." />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <DockPanel Margin="0,0,0,8">
+                                    <Button DockPanel.Dock="Right" Height="44" Padding="16,0" FontSize="14"
+                                            Content="Actualizar" Style="{StaticResource BotonContorno}"
+                                            Command="{Binding ActualizarCelularesCommand}" />
+                                    <TextBlock VerticalAlignment="Center" Text="Vinculados" Style="{StaticResource EtiquetaSuave}" />
+                                </DockPanel>
+
+                                <TextBlock Text="Todavía no hay celulares vinculados." Style="{StaticResource EtiquetaSuave}" FontSize="15"
+                                           Visibility="{Binding Celulares.Count, Converter={StaticResource ValorAVisibilidad}, ConverterParameter=invertir}" />
+
+                                <ItemsControl ItemsSource="{Binding Celulares}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,8" Padding="14,10" CornerRadius="12" Background="{StaticResource Fondo}">
+                                                <DockPanel>
+                                                    <Button DockPanel.Dock="Right" Height="44" Padding="16,0" FontSize="14"
+                                                            Content="{Binding TextoQuitar}" Style="{StaticResource BotonCancelarTicket}"
+                                                            Command="{Binding DataContext.QuitarCelularCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}" />
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Dispositivo.Mesero}" FontSize="17" FontWeight="ExtraBold" />
+                                                        <TextBlock Text="{Binding Detalle}" Style="{StaticResource EtiquetaSuave}" FontSize="13" />
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Border Visibility="{Binding MensajeCelulares, Converter={StaticResource ValorAVisibilidad}}">
+                                    <Border.Style>
+                                        <Style TargetType="Border" BasedOn="{StaticResource Mensaje}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding MensajeCelularesEsError}" Value="True">
+                                                    <Setter Property="Background" Value="{StaticResource Rojo}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock Text="{Binding MensajeCelulares}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,17 @@
+<Application x:Class="Miches360.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:Miches360.Convertidores"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Tema/Estilos.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <conv:BoolAVisibilidadConverter x:Key="BoolAVisibilidad" />
+            <conv:ValorAVisibilidadConverter x:Key="ValorAVisibilidad" />
+            <conv:VistaPreviaTicketConverter x:Key="VistaPreviaTicket" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

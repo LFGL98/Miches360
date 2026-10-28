@@ -1,0 +1,61 @@
+<UserControl x:Class="Miches360.Vistas.EditorNotaVista"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Miches360.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:EditorNotaViewModel}"
+             d:DesignWidth="390" d:DesignHeight="696">
+
+    <Border Background="{StaticResource Ticket}">
+        <Grid Margin="20,18,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="NOTA" Style="{StaticResource Titulo}" FontSize="26" Foreground="{StaticResource TicketTexto}" />
+                <TextBlock Text="{Binding Producto}" FontSize="17" FontWeight="ExtraBold" TextWrapping="Wrap"
+                           Foreground="{StaticResource TicketTextoSuave}" />
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1" Margin="0,14,0,0" VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Sugerencias}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding}" Style="{StaticResource BotonChipTicket}"
+                                        Command="{Binding DataContext.AgregarSugerenciaCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Margin="0,8,0,6" Text="O escríbela" FontSize="14" FontWeight="SemiBold"
+                               Foreground="{StaticResource TicketTextoSuave}" />
+                    <TextBox Style="{StaticResource CampoTicket}" MaxLength="120"
+                             Text="{Binding Texto, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <StackPanel Grid.Row="2" Margin="0,14,0,0">
+                <Button Height="68" FontSize="20" Content="Guardar nota"
+                        Style="{StaticResource BotonVerde}" Command="{Binding GuardarCommand}" />
+                <UniformGrid Columns="2" Margin="0,10,0,0">
+                    <Button Height="52" Margin="0,0,5,0" Content="Quitar nota"
+                            Style="{StaticResource BotonCancelarTicket}" Command="{Binding QuitarCommand}" />
+                    <Button Height="52" Margin="5,0,0,0" Content="Cancelar"
+                            Style="{StaticResource BotonChipTicket}" Command="{Binding CerrarCommand}" />
+                </UniformGrid>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

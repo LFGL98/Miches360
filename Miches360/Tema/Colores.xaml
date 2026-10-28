@@ -1,0 +1,36 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="Fondo" Color="#1E1310" />
+    <SolidColorBrush x:Key="Encabezado" Color="#2A1A14" />
+    <SolidColorBrush x:Key="Borde" Color="#45302A" />
+    <SolidColorBrush x:Key="Riel" Color="#24160F" />
+    <SolidColorBrush x:Key="Tile" Color="#33211A" />
+    <SolidColorBrush x:Key="Chip" Color="#3A2620" />
+    <SolidColorBrush x:Key="PanelActivo" Color="#2E1D17" />
+    <SolidColorBrush x:Key="PanelInactivo" Color="#26170F" />
+
+    <SolidColorBrush x:Key="Texto" Color="#F6E9D2" />
+    <SolidColorBrush x:Key="TextoSuave" Color="#CDB79A" />
+    <SolidColorBrush x:Key="Acento" Color="#E1AF5B" />
+    <SolidColorBrush x:Key="TextoSobreAcento" Color="#261612" />
+
+    <SolidColorBrush x:Key="Ticket" Color="#F6E9D2" />
+    <SolidColorBrush x:Key="TicketTexto" Color="#261612" />
+    <SolidColorBrush x:Key="TicketTextoSuave" Color="#6B5240" />
+    <SolidColorBrush x:Key="TicketLinea" Color="#E2CFAE" />
+    <SolidColorBrush x:Key="TicketBoton" Color="#FFF8EC" />
+    <SolidColorBrush x:Key="TicketBotonBorde" Color="#D6BE97" />
+
+    <SolidColorBrush x:Key="Verde" Color="#2F6B3F" />
+    <SolidColorBrush x:Key="VerdeClaro" Color="#8FC79B" />
+    <SolidColorBrush x:Key="Azul" Color="#24456E" />
+    <SolidColorBrush x:Key="AzulClaro" Color="#9CC0EA" />
+    <SolidColorBrush x:Key="Rojo" Color="#A8512E" />
+    <SolidColorBrush x:Key="RojoClaro" Color="#E8A27A" />
+    <SolidColorBrush x:Key="Blanco" Color="#FFFFFF" />
+
+    <FontFamily x:Key="FuenteTitulo">Bahnschrift SemiBold Condensed, Bahnschrift, Segoe UI</FontFamily>
+    <FontFamily x:Key="FuenteTexto">Segoe UI</FontFamily>
+
+</ResourceDictionary>
